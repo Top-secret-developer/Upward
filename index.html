@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upward Event – I'm Attending</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #111;
+      color: #fff;
+    }
+    canvas {
+      max-width: 90%;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+    input, button {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎉 I'm Attending UPWARD 2025</h2>
+
+  <input type="file" accept="image/*" id="upload" />
+  <br />
+  <canvas id="canvas" width="768" height="911"></canvas>
+  <br />
+  <button id="downloadBtn">Download My Attending Image</button>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const baseImage = new Image();
+    baseImage.src = "Upward.jpg"; // your design file
+
+    baseImage.onload = () => {
+      ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+    };
+
+    document.getElementById("upload").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const userImage = new Image();
+        userImage.onload = function() {
+          // Redraw base design
+          ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+
+          // Adjust these values to perfectly match the circle
+          const radius = 185; // size of the circle
+          const x = (canvas.width / 2) - radius; // centers horizontally
+          const y = 570 - radius; // moves image upward to align with white circle
+
+          // Create circular clipping region
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2, true);
+          ctx.closePath();
+          ctx.clip();
+
+          // Draw user photo inside the circle
+          ctx.drawImage(userImage, x, y, radius * 2, radius * 2);
+          ctx.restore();
+        };
+        userImage.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.download = "Upward_Attending.png";
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  </script>
+</body>
+</html>
