@@ -1,83 +1,621 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Upward Event – I'm Attending</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UPWARD 2025 | Where Music Meets the Divine</title>
+
+  <!-- Dancing Script for all text + fallback -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      background: #111;
-      color: #fff;
+    :root{
+      --gold: #ffca28;
+      --bg-dark: #070707;
+      --panel-dark: rgba(255,255,255,0.04);
+      --text-light: #ffffff;
+      --muted: #cfcfcf;
+      --glass: rgba(255,255,255,0.06);
     }
-    canvas {
-      max-width: 90%;
-      margin-top: 20px;
-      border-radius: 10px;
+
+    /* Base reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: "Dancing Script", cursive;
+      background: radial-gradient(circle at 10% 10%, #0a0a0a 0%, #050505 60%);
+      color:var(--text-light);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
     }
-    input, button {
-      margin-top: 20px;
+
+    /* NAV */
+    header{
+      width:100%;
+      position:fixed;
+      top:0;
+      left:0;
+      z-index:1200;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:18px 28px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.9));
+      color:#111;
+      box-shadow:0 6px 30px rgba(0,0,0,0.12);
+      transition:all .35s ease;
+    }
+    header.dark { background: rgba(0,0,0,0.75); color:var(--text-light); box-shadow: none; }
+
+    .nav-left{
+      display:flex;align-items:center;gap:12px;
+    }
+    .logo-spot{
+      width:56px;height:56px;border-radius:12px;overflow:hidden;background:#fff;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 6px 24px rgba(0,0,0,0.12);
+    }
+    .logo-spot img{width:100%;height:100%;object-fit:cover;display:block}
+
+    .brand{font-size:28px;letter-spacing:1px;font-weight:700}
+
+    /* right nav / controls */
+    .nav-right{display:flex;align-items:center;gap:14px}
+    .nav-links{display:flex;gap:22px;list-style:none;font-size:16px}
+    .nav-links a{color:inherit;text-decoration:none;opacity:.95}
+    .nav-links a:hover{color:var(--gold)}
+
+    /* hamburger */
+    .hamburger{display:none;flex-direction:column;gap:6px;cursor:pointer}
+    .hamburger span{
+      width:34px;height:3px;background:#111;border-radius:3px;display:block;transition:all .35s ease
+    }
+    .hamburger.active span:nth-child(1){transform:translateY(9px) rotate(45deg)}
+    .hamburger.active span:nth-child(2){opacity:0}
+    .hamburger.active span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
+
+    /* overlay menu */
+    .overlay{
+      position:fixed;left:0;top:0;width:100%;height:100vh;z-index:1190;
+      background:linear-gradient(180deg, rgba(2,2,2,0.98), rgba(8,8,8,0.96));
+      display:flex;align-items:center;justify-content:center;transform:translateX(100%);transition:transform .45s cubic-bezier(.2,.9,.2,1);
+    }
+    .overlay.show{transform:translateX(0)}
+    .overlay ul{list-style:none;text-align:center;padding:0}
+    .overlay li{margin:18px 0}
+    .overlay a{
+      color:var(--text-light);text-decoration:none;font-size:42px;font-weight:700;opacity:0;
+      display:inline-block;transform:translateY(20px);animation:overlayItemIn .6s forwards;
+    }
+    .overlay a:nth-child(1){animation-delay:.08s}
+    .overlay a:nth-child(2){animation-delay:.16s}
+    .overlay a:nth-child(3){animation-delay:.24s}
+    .overlay a:nth-child(4){animation-delay:.32s}
+    @keyframes overlayItemIn{to{opacity:1;transform:none}}
+
+    /* top buttons */
+    .control-btn{background:transparent;border:2px solid rgba(0,0,0,0.06);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .theme-toggle{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:var(--gold);color:#111;font-weight:700}
+    .sound-toggle{background:transparent;border:2px solid rgba(255,255,255,0.08);padding:8px;border-radius:10px;color:inherit}
+
+    /* HERO */
+    .hero{
+      margin-top:110px;
+      max-width:1100px;
+      padding:64px 28px;
+      margin-left:auto;margin-right:auto;
+      text-align:center;
+    }
+    .hero h1{
+      font-size:4em;line-height:1.02;color:var(--gold);margin-bottom:18px;
+      /* typing via JS (no cursor) */
+      overflow:hidden;
+     
+    }
+    .hero p{max-width:880px;margin:16px auto;color:#e6e6e6;font-size:30px;line-height:1.7}
+
+    /* ABOUT program & vision (kept) */
+    .about{
+      max-width:1100px;margin:28px auto;padding:28px;border-radius:14px;background:var(--panel-dark);
+      display:block;color:#eaeaea;font-size:16px;line-height:1.75;
+      box-shadow:0 10px 40px rgba(0,0,0,0.4);
+    }
+
+    .about p{
+      font-size: 25px;
+    }
+    .about h2{color:var(--gold);font-size:26px;margin-bottom:12px}
+
+    /* Convener area */
+    .convener{
+      max-width:1100px;margin:36px auto;display:grid;grid-template-columns:320px 1fr;gap:28px;align-items:center;padding:26px;background:var(--glass);border-radius:14px;
+    }
+
+    .convener p{
+      font-size: 25px;
+    }
+
+    
+    .convener h1{
+      font-size: 50px;
+    }
+
+    
+    .convener .photo{
+      width:320px;height:320px;border-radius:14px;overflow:hidden;background:#222;display:flex;align-items:center;justify-content:center;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.5);
+      animation:bounceInDown .9s ease both;
+    }
+    .convener .photo img{width:100%;height:100%;object-fit:cover;display:block}
+    .convener .info h3{font-size:34px;color:var(--gold);margin-bottom:8px; font-weight:700}
+    .convener .info p{color:var(--muted);margin-bottom:10px}
+    .socials{display:flex;gap:12px;margin-top:12px}
+    .socials a{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.03);color:var(--text-light);text-decoration:none;transition:transform .25s}
+    .socials a:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(0,0,0,0.45)}
+
+    /* Team members */
+    .team{
+      max-width:1100px;margin:36px auto;padding:20px;border-radius:12px;background:var(--panel-dark);
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;
+    }
+    .member{
+      background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+      padding:18px;border-radius:12px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.4);
+      transform:translateY(40px);opacity:0;animation:cardIn .7s forwards;
+    }
+    .member:nth-child(1){animation-delay:.08s}
+    .member:nth-child(2){animation-delay:.16s}
+    .member:nth-child(3){animation-delay:.24s}
+    .member img{width:120px;height:120px;border-radius:14px;object-fit:cover;margin:8px auto;display:block}
+    .member h4{font-size:20px;color:var(--gold);margin:10px 0}
+    .member p{color:var(--muted);font-size:14px}
+    .member .m-socials{display:flex;gap:8px;justify-content:center;margin-top:10px}
+
+    @keyframes cardIn{
+      to{transform:none;opacity:1}
+    }
+
+    /* FLIER GENERATOR centered */
+    .generator-wrap{max-width:1100px;margin:42px auto;padding:26px;background:var(--glass);border-radius:14px;text-align:center}
+    #canvas{max-width:100%;border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,0.6);display:block;margin:18px auto}
+    .controls{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+    input[type=file]{display:none}
+    .btn{background:var(--gold);color:#111;padding:12px 18px;border-radius:999px;border:none;font-weight:700;cursor:pointer}
+    .btn.secondary{background:transparent;color:var(--text-light);border:2px solid rgba(255,255,255,0.06)}
+
+    /* animations for images bouncing */
+    @keyframes bounceInDown{0%{opacity:0;transform:translateY(-60px)}60%{opacity:1;transform:translateY(8px)}100%{transform:translateY(0)}}
+    @keyframes bounceInRight{0%{opacity:0;transform:translateX(80px)}60%{opacity:1;transform:translateX(-8px)}100%{transform:translateX(0)}}
+    @keyframes bounceSmall{0%{transform:translateY(8px)}50%{transform:translateY(-8px)}100%{transform:translateY(8px)}}
+
+    .bounce-top{animation:bounceInDown .9s both}
+    .bounce-right{animation:bounceInRight .9s both}
+    .subtle-bounce{animation:bounceSmall 3s ease-in-out infinite}
+
+    /* footer */
+    footer{max-width:1100px;margin:36px auto 60px;padding:20px;text-align:center;color:var(--muted)}
+
+    /* Dark theme */
+    body.dark{
+      background: radial-gradient(circle at 10% 10%, #050505 0%, #000 60%);
+      color:#fff;
+    }
+    body.dark header{background:rgba(0,0,0,0.6);color:#fff}
+    body.dark .logo-spot{background:#0b0b0b}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .convener{grid-template-columns:1fr;gap:18px}
+      header{padding:14px 16px}
+     
+
+      .logo-spot{width:48px;height:48px}
+      .nav-links{display:none}
+      .hamburger{display:flex}
+    }
+    @media (max-width:520px){
+   
+      
+      .convener{padding:18px}
+      .member img{width:100px;height:100px}
+      .overlay a{font-size:28px}
     }
   </style>
 </head>
 <body>
-  <h2>🎉 I'm Attending UPWARD 2025</h2>
 
-  <input type="file" accept="image/*" id="upload" />
-  <br />
-  <canvas id="canvas" width="768" height="911"></canvas>
-  <br />
-  <button id="downloadBtn">Download My Attending Image</button>
+  <!-- HEADER -->
+  <header id="siteHeader">
+    <div class="nav-left">
+      <div class="logo-spot" title="Replace with your logo">
+        <!-- Replace 'logo.png' with your real logo file -->
+        <img src="logo.png" alt="Logo" onerror="this.src='Upward.jpg'">
+      </div>
+      <div class="brand">UPWARD 2025</div>
+    </div>
+
+    <div class="nav-right">
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">Program</a></li>
+        <li><a href="#convener">Convener</a></li>
+        <li><a href="#generator">Flier</a></li>
+      </ul>
+
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">Dark</button>
+      <button class="sound-toggle" id="soundToggle" title="Toggle sound">🔈</button>
+
+      <div class="hamburger" id="hamburgerBtn" aria-label="Open menu" role="button">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- OVERLAY MENU -->
+  <div class="overlay" id="overlayMenu" aria-hidden="true">
+    <ul>
+      <li><a href="#hero" onclick="closeMenu()">Home</a></li>
+      <li><a href="#about" onclick="closeMenu()">About Program</a></li>
+      <li><a href="#convener" onclick="closeMenu()">Convener</a></li>
+      <li><a href="#generator" onclick="closeMenu()">Get Flier</a></li>
+    </ul>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero" class="hero">
+    <h1 data-typed="Where Music Meets the Divine" >Where Music Meets the Divine</h1>
+    <p id="heroText">UPWARD is an Annual Music Concert/Outreach designed For one purpose “Kingdom Expansion”. The Vision was birthed in 2019, when we had our first meeting at Grace Alive Min Int’l, Port Harcourt Rivers State. After powerful editions in 2020 and 2021, UPWARD returns by divine mandate for 23rd November 2025.</p>
+  </section>
+
+  <!-- PROGRAM / VISION (kept) -->
+  <section id="about" class="about">
+    <h2>About the Program & Vision</h2>
+    <p>
+      UPWARD is An Annual Music Concert/Outreach designed For one purpose — <strong>“Kingdom Expansion”</strong>. The Vision was birthed in 2019, When we had our First Meeting @ Grace Alive Min Int’l Porthacourt Rivers State. Other editions held in 2020, 2021 and we paused after 2022. To the Glory of God, By Divine Mandate we are excited to have this Year’s edition of UPWARD coming up on the <strong>23rd of November 2025</strong> in Port Harcourt, Rivers State, featuring renowned gospel artists and inspiring ministers. Our goal is to create a memorable experience that fosters spiritual growth and kingdom expansion.
+    </p>
+    <p style="margin-top:12px;font-style:italic;color:var(--gold);">
+      "MUSIC MEETS THE DIVINE." — <small style="font-style:normal;color:var(--muted)">2 Chronicles 5:13-14 NLT</small>
+    </p>
+  </section>
+
+  <!-- CONVENER -->
+  <section id="convener" class="convener">
+    <div class="photo bounce-top">
+      <!-- use your preferred convener image -->
+      <img src="./Salvation.jpg" alt="Salvation Nwokorie">
+    </div>
+
+    <div class="info">
+      <h3 data-typed="Salvation Nwokorie">Salvation Nwokorie</h3>
+      <p>I am a passionate advocate for <strong>KINGDOM EXPANSION</strong>, driven by a singular vision to see God's dominion manifest vibrantly in every sphere of life. Rooted in faith and fueled by divine purpose, Salvation embodies a contagious zeal for spreading light and truth.</p>
+
+      <p>With this mantra, Salvation channels innovative energy towards uplifting endeavors that catalyze growth, impact communities, and glorify God.</p>
+
+      <ul style="color:var(--muted);margin-top:8px; font-size: 25px;">
+        <li>✨ <strong>Vision:</strong> Kingdom Expansion – advancing God's reign through purpose-driven living.</li>
+        <li>🔥 <strong>Approach:</strong> Igniting creativity to birth transformative change.</li>
+        <li>❤ <strong>Heart:</strong> Passionate about seeing lives touched and God's glory revealed.</li>
+      </ul>
+
+      
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <h1 style="text-align: center;">Team Members</h1>
+  <section class="team" aria-label="Team members">
+  
+    <div class="member">
+      <img src="./geeminor.jpg" alt="Team 1">
+      <h4>David Gideon </h4>
+      <p>Professional Guitarist | Music Producer</p>
+      <div class="m-socials">
+        <a href="#">🐦</a><a href="#">📸</a>
+      </div>
+    </div>
+
+    <div class="member">
+      <img src="./obi.jpg" alt="Team 2">
+      <h4>Obinna Bright </h4>
+      <p>Professional drummer</p>
+      <div class="m-socials">
+        <a href="#">🐦</a><a href="#">📸</a>
+      </div>
+    </div>
+
+    <div class="member">
+      <img src="./my image.jpg" alt="Team 3">
+      <h4>Michael Emeruwa</h4>
+      <p>Professional Pianist/Band leader</p>
+      <div class="m-socials">
+        <a href="#">🐦</a><a href="#">📸</a>
+      </div>
+    </div>
+
+
+     <div class="member">
+      <img src="Upward.jpg" alt="Team 3">
+      <h4>Miracle Okorie</h4>
+      <p>Professional Bassist</p>
+      <div class="m-socials">
+        <a href="#">🐦</a><a href="#">📸</a>
+      </div>
+    </div>
+
+     <div class="member">
+      <img src="Upward.jpg" alt="Team 3">
+      <h4>Austen Ojukwu</h4>
+      <p>BGV/MD</p>
+      <div class="m-socials">
+        <a href="#">🐦</a><a href="#">📸</a>
+      </div>
+    </div>
+
+     <div class="member">
+      <img src="Upward.jpg" alt="Team 3">
+      <h4>Aisha Blessing</h4>
+      <p>BGV</p>
+      <div class="m-socials">
+        <a href="#">🐦</a><a href="#">📸</a>
+      </div>
+    </div>
+
+     <div class="member">
+      <img src="Upward.jpg" alt="Team 3">
+      <h4>Glory Newman</h4>
+      <p>BGV</p>
+      <div class="m-socials">
+        <a href="#">🐦</a><a href="#">📸</a>
+      </div>
+    </div>
+     <div class="member">
+      <img src="Upward.jpg" alt="Team 3">
+      <h4>Malachy Gideon</h4>
+      <p>Media & Outreach — PR, socials & coverage</p>
+      <div class="m-socials">
+        <a href="#">🐦</a><a href="#">📸</a>
+      </div>
+    </div>
+
+     <div class="member">
+      <img src="Upward.jpg" alt="Team 3">
+      <h4>Michael</h4>
+      <p>Media & Outreach — PR, socials & coverage</p>
+      <div class="m-socials">
+        <a href="#">🐦</a><a href="#">📸</a>
+      </div>
+    </div>
+
+     <div class="member">
+      <img src="Upward.jpg" alt="Team 3">
+      <h4>Laura Alozie</h4>
+      <p>Media & Outreach — PR, socials & coverage</p>
+      <div class="m-socials">
+        <a href="#">🐦</a><a href="#">📸</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- GENERATOR -->
+  <section id="generator" class="generator-wrap" aria-label="Flier Generator">
+    <h2 style="color:var(--gold);margin-bottom:8px">🎉 I'm Attending – UPWARD 2025</h2>
+    <p style="color:var(--muted);max-width:820px;margin:0 auto 12px">Upload your photo and we'll place it in the round spot on the flier automatically — then download & share.</p>
+
+    <canvas id="canvas" width="768" height="911" aria-label="Flier preview"></canvas>
+
+    <div class="controls">
+      <label class="btn" for="uploadInput">Upload Photo</label>
+      <input id="uploadInput" type="file" accept="image/*" />
+      <button class="btn secondary" id="downloadBtn">Download Flier</button>
+      <button class="btn" id="resetBtn">Reset</button>
+    </div>
+  </section>
+
+  <footer>Designed with ❤ by All Smart • © 2025 UPWARD Concert</footer>
+
+  <!-- Audio: place bg.mp3 in same folder if you want autoplay to work reliably -->
+  <audio id="bgAudio" src="./SALVATION UCHECHUKWU NWOKORIE - HOLY FIRE.mp3" loop></audio>
 
   <script>
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-    const baseImage = new Image();
-    baseImage.src = "Upward.jpg"; // your design file
+    /* ===== GLOBAL UTIL ===== */
+    const $ = (s) => document.querySelector(s);
 
-    baseImage.onload = () => {
-      ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+    /* ===== overlay menu toggle ===== */
+    const hamburgerBtn = $('#hamburgerBtn');
+    const overlay = $('#overlayMenu');
+
+    function closeMenu(){ overlay.classList.remove('show'); hamburgerBtn.classList.remove('active'); }
+    hamburgerBtn.addEventListener('click', () => {
+      hamburgerBtn.classList.toggle('active');
+      overlay.classList.toggle('show');
+    });
+
+    // close overlay on link click handled inline
+
+    /* ===== THEME TOGGLE (light/dark) ===== */
+    const themeToggle = $('#themeToggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const header = $('#siteHeader');
+      header.classList.toggle('dark');
+      themeToggle.textContent = document.body.classList.contains('dark') ? 'Light' : 'Dark';
+    });
+
+    /* ===== SOUND: autoplay attempt & toggle ===== */
+    const soundToggle = $('#soundToggle');
+    const bgAudio = $('#bgAudio');
+
+    async function tryPlayAudio(){
+      try{
+        bgAudio.muted = false;
+        await bgAudio.play();
+        soundToggle.textContent = '🔊';
+        
+      }catch(e){
+        // autoplay blocked: show muted icon; user can toggle
+        bgAudio.muted = false;
+        soundToggle.textContent = '🔈';
+      }
+    }
+
+    // Attempt autoplay on load
+    window.addEventListener('load', () => {
+      tryPlayAudio();
+    });
+
+    soundToggle.addEventListener('click', async () => {
+      if(bgAudio.paused){
+        try{ await bgAudio.play(); soundToggle.textContent = '🔊'; }
+        catch(e){ bgAudio.muted = false; soundToggle.textContent = '🔈'; }
+      } else {
+        bgAudio.pause(); soundToggle.textContent = '🔈';
+      }
+    });
+
+    /* ===== TYPING ANIMATION that repeats on scroll (no cursor) ===== */
+    function typeText(el, text, speed=28){
+      el.textContent = '';
+      let i=0;
+      function step(){
+        if(i<=text.length){
+          el.textContent = text.slice(0,i);
+          i++;
+          el._typingTimer = setTimeout(step, speed);
+        } else {
+          clearTimeout(el._typingTimer);
+        }
+      }
+      step();
+    }
+
+    function resetTyped(el){
+      if(el._typingTimer) clearTimeout(el._typingTimer);
+      el.textContent = '';
+    }
+
+    // find all elements with data-typed
+    const typedEls = document.querySelectorAll('[data-typed]');
+    const ioOptions = { root:null, rootMargin:'0px', threshold:0.1 };
+
+    const typedObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const el = entry.target;
+        if(entry.isIntersecting){
+          // start typing using element's data-typed text (or inner text fallback)
+          const txt = el.dataset.typed || el.textContent.trim();
+          typeText(el, txt, 28);
+        } else {
+          // reset when out of view so it repeats on re-entry
+          resetTyped(el);
+        }
+      });
+    }, ioOptions);
+
+    typedEls.forEach(e => typedObserver.observe(e));
+
+    // also apply to hero paragraph (not data-typed)
+    const heroPara = document.getElementById('heroText');
+    typedObserver.observe(heroPara);
+    heroPara.dataset.typed = heroPara.textContent.trim();
+
+    /* ===== IMAGE BOUNCE: add subtle looping bounce to small visuals (done via CSS classes). 
+             Team cards animate in via CSS keyframes. */
+
+    /* ===== TEAM member reveal on scroll: use observer to add transform */
+    const members = document.querySelectorAll('.member');
+    const memObs = new IntersectionObserver((ents) => {
+      ents.forEach(e => {
+        if(e.isIntersecting){ e.target.style.transform='none'; e.target.style.opacity='1'; }
+        else { e.target.style.transform='translateY(40px)'; e.target.style.opacity='0'; }
+      });
+    }, {threshold:0.12});
+    members.forEach(m => memObs.observe(m));
+
+    /* ===== FLIER GENERATOR (canvas) ===== */
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const base = new Image();
+    base.src = 'Upward.jpg'; // your design
+    // draw base when ready
+    base.onload = () => {
+      // ensure base covers canvas area
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(base, 0, 0, canvas.width, canvas.height);
     };
 
-    document.getElementById("upload").addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
+    const uploadInput = $('#uploadInput');
+    uploadInput.addEventListener('change', (ev) => {
+      const f = ev.target.files[0];
+      if(!f) return;
+      const r = new FileReader();
+      r.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          // redraw base
+          ctx.clearRect(0,0,canvas.width,canvas.height);
+          ctx.drawImage(base, 0, 0, canvas.width, canvas.height);
 
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const userImage = new Image();
-        userImage.onload = function() {
-          // Redraw base design
-          ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+          // circle area values (adjusted to match your design)
+          const radius = 185;
+          const x = (canvas.width / 2) - radius;
+          const y = 570 - radius;
 
-          // Adjust these values to perfectly match the circle
-          const radius = 185; // size of the circle
-          const x = (canvas.width / 2) - radius; // centers horizontally
-          const y = 570 - radius; // moves image upward to align with white circle
-
-          // Create circular clipping region
+          // create circular mask and draw user image clipped
           ctx.save();
           ctx.beginPath();
-          ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2, true);
+          ctx.arc(x + radius, y + radius, radius, 0, Math.PI * 2);
           ctx.closePath();
           ctx.clip();
 
-          // Draw user photo inside the circle
-          ctx.drawImage(userImage, x, y, radius * 2, radius * 2);
+          // To better fit, center & cover the circle area
+          // compute scale to cover
+          const size = radius * 2;
+          // center crop logic: drawImage with cover behaviour
+          const aspect = img.width / img.height;
+          let dw = size, dh = size, sx=0, sy=0, sWidth=img.width, sHeight=img.height;
+          if(aspect > 1){
+            // wide image: crop sides
+            sWidth = img.height;
+            sHeight = img.height;
+            sx = (img.width - img.height)/2;
+          } else {
+            // tall: crop top/bottom
+            sWidth = img.width;
+            sHeight = img.width;
+            sy = (img.height - img.width)/2;
+          }
+          ctx.drawImage(img, sx, sy, sWidth, sHeight, x, y, dw, dh);
+
           ctx.restore();
         };
-        userImage.src = event.target.result;
+        img.src = e.target.result;
       };
-      reader.readAsDataURL(file);
+      r.readAsDataURL(f);
     });
 
-    document.getElementById("downloadBtn").addEventListener("click", () => {
-      const link = document.createElement("a");
-      link.download = "Upward_Attending.png";
-      link.href = canvas.toDataURL();
-      link.click();
+    // download & reset
+    $('#downloadBtn').addEventListener('click', () => {
+      const a=document.createElement('a');
+      a.href=canvas.toDataURL('image/png');
+      a.download='Upward_Attending.png';
+      a.click();
     });
+    $('#resetBtn').addEventListener('click', () => {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(base, 0, 0, canvas.width, canvas.height);
+      uploadInput.value='';
+    });
+
+    /* ===== Remove any caret effects from typing: handled via JS (no cursor) */
+
+    /* ===== Accessibility: close overlay on Escape ===== */
+    document.addEventListener('keydown', (e)=>{
+      if(e.key==='Escape') closeMenu();
+    });
+
+    /* ===== Make sure the overlay has no list lines and looks clean: CSS above handles it ===== */
+
   </script>
 </body>
 </html>
