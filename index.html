@@ -24,7 +24,7 @@
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%}
     body{
-      font-family: "Dancing Script", cursive;
+      font-family: "poppins", cursive;
       background: radial-gradient(circle at 10% 10%, #0a0a0a 0%, #050505 60%);
       color:var(--text-light);
       -webkit-font-smoothing:antialiased;
@@ -513,35 +513,28 @@ body.dark a:hover {
       overlay.classList.toggle('show');
     });
 
-    // close overlay on link click handled inline
-const bgAudio = document.getElementById('bgAudio');
+  const bgAudio = document.getElementById('bgAudio');
 const soundToggle = document.getElementById('soundToggle');
 let musicStarted = false;
 
-function startMusicOnScroll() {
-    if (!musicStarted) {
-        bgAudio.play().then(() => {
-            soundToggle.textContent = '🔊'; // show sound icon
-            musicStarted = true;
-        }).catch(() => {
-            // if browser blocks, keep icon as muted
-            soundToggle.textContent = '🔈';
-        });
-    }
+// Function to start music
+async function startMusic(){
+  if(musicStarted) return;
+  try{
+    await bgAudio.play();
+    bgAudio.muted = false;
+    soundToggle.textContent = '🔊';
+    musicStarted = true;
+  } catch(e){
+    bgAudio.muted = true;
+    soundToggle.textContent = '🔈';
+    musicStarted = true;
+  }
 }
 
-// Listen to first scroll event
-window.addEventListener('scroll', startMusicOnScroll, { once: true });
+// Play on first scroll (mobile-friendly)
+window.addEventListener('scroll', startMusic, { once: true });
 
-// Also allow mute/unmute toggle anytime
-soundToggle.addEventListener('click', () => {
-    if (bgAudio.paused) {
-        bgAudio.play().then(() => soundToggle.textContent = '🔊');
-    } else {
-        bgAudio.pause();
-        soundToggle.textContent = '🔈';
-    }
-});
 
 
     /* ===== TYPING ANIMATION that repeats on scroll (no cursor) ===== */
