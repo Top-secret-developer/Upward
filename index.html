@@ -231,6 +231,12 @@ body.dark .about {
   color: #111;
 }
 
+body.dark .about p  {
+  background: #f0f0f0;
+  color: #111;
+}
+
+
 /* Convener */
 body.dark .convener {
   background: #f0f0f0;
@@ -381,7 +387,7 @@ body.dark a:hover {
       UPWARD is An Annual Music Concert/Outreach designed For one purpose — <strong>“Kingdom Expansion”</strong>. The Vision was birthed in 2019, When we had our First Meeting @ Grace Alive Min Int’l Porthacourt Rivers State. Other editions held in 2020, 2021 and we paused after 2022. To the Glory of God, By Divine Mandate we are excited to have this Year’s edition of UPWARD coming up on the <strong>23rd of November 2025</strong> in Port Harcourt, Rivers State, featuring renowned gospel artists and inspiring ministers. Our goal is to create a memorable experience that fosters spiritual growth and kingdom expansion.
     </p>
     <p style="margin-top:12px;font-style:italic;color:var(--gold);">
-      "MUSIC MEETS THE DIVINE." — <small style="font-style:normal;color:var(--muted)">2 Chronicles 5:13-14 NLT</small>
+      "MUSIC MEETS THE DIVINE." — <small style="font-style:normal;">2 Chronicles 5:13-14 NLT</small>
     </p>
   </section>
 
@@ -463,19 +469,13 @@ body.dark a:hover {
      <div class="member">
       <img src="Upward.jpg" alt="Team 3">
       <h4>Malachy Gideon</h4>
-      <p>Media & Outreach — PR, socials & coverage</p>
-    </div>
-
-     <div class="member">
-      <img src="Upward.jpg" alt="Team 3">
-      <h4>Michael</h4>
-      <p>Media & Outreach — PR, socials & coverage</p>
+      <p>BGV</p>
     </div>
 
      <div class="member">
       <img src="Upward.jpg" alt="Team 3">
       <h4>Laura Alozie</h4>
-      <p>Media & Outreach — PR, socials & coverage</p>
+      <p>BGV</p>
     </div>
   </section>
 
@@ -517,23 +517,25 @@ body.dark a:hover {
 const soundToggle = document.getElementById('soundToggle');
 let musicStarted = false;
 
-// Function to start music
-async function startMusic(){
-  if(musicStarted) return;
-  try{
+async function startMusic() {
+  if (musicStarted) return; // only run once
+  try {
     await bgAudio.play();
     bgAudio.muted = false;
     soundToggle.textContent = '🔊';
     musicStarted = true;
-  } catch(e){
+  } catch(e) {
     bgAudio.muted = true;
     soundToggle.textContent = '🔈';
     musicStarted = true;
   }
 }
 
-// Play on first scroll (mobile-friendly)
-window.addEventListener('scroll', startMusic, { once: true });
+// Trigger on first scroll OR tap (mobile-friendly)
+['scroll', 'touchstart', 'click'].forEach(evt => {
+  window.addEventListener(evt, startMusic, { once: true });
+});
+
 
 
 
