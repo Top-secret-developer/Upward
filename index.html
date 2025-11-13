@@ -512,28 +512,24 @@ body.dark a:hover {
       hamburgerBtn.classList.toggle('active');
       overlay.classList.toggle('show');
     });
-
-  const bgAudio = document.getElementById('bgAudio');
+const bgAudio = document.getElementById('bgAudio');
 const soundToggle = document.getElementById('soundToggle');
-let musicStarted = false;
 
-async function startMusic() {
-  if (musicStarted) return; // only run once
-  try {
-    await bgAudio.play();
-    bgAudio.muted = false;
-    soundToggle.textContent = '🔊';
-    musicStarted = true;
-  } catch(e) {
-    bgAudio.muted = true;
+// Toggle music on click
+soundToggle.addEventListener('click', async () => {
+  if (bgAudio.paused) {
+    try {
+      await bgAudio.play();
+      bgAudio.muted = false;
+      soundToggle.textContent = '🔊';
+    } catch(e) {
+      bgAudio.muted = true;
+      soundToggle.textContent = '🔈';
+    }
+  } else {
+    bgAudio.pause();
     soundToggle.textContent = '🔈';
-    musicStarted = true;
   }
-}
-
-// Trigger on first scroll OR tap (mobile-friendly)
-['scroll', 'touchstart', 'click'].forEach(evt => {
-  window.addEventListener(evt, startMusic, { once: true });
 });
 
 
